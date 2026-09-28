@@ -60,6 +60,7 @@ class opticalPhase(initIsm):
                                 self.outdir, band)
 
         # Apply system MTF
+        # THIS IS SESSION 3 WORK
         toa = self.applySysMtf(toa, Hsys) # always calculated
         self.logger.debug("TOA [0,0] " +str(toa[0,0]) + " [e-]")
 
@@ -114,7 +115,32 @@ class opticalPhase(initIsm):
         :param band: band
         :return: TOA image 2D in radiances [mW/m2]
         """
-        # TODO
+        ## TODO how to normalize isrf ?, area of isrf needs to be one
+
+        isrf, wv_isrf = readIsrf(self.auxdir + '/' + self.ismConfig.isrffile, band)
+        wv_isrf = wv_isrf * 1000
+
+        # 0 init output
+        toa = np.zeros((sgm_toa.shape[0], sgm_toa.shape[1]))
+
+        #1. normalize ISRF
+        # TO DO LATER CHECK CORRECT CODE
+            isrf = isrf/np.sum(isrf)
+
+        # Creating interpolant of the ISRF interpolate ISRF to the SGM wavelengths
+        # cs = interp1d(wv_isrf, isrf, fill_value=(0, 0), bounds_error=False)
+        # interp_isrf = cs(sgm_wv)  #1D vector
+
+        for ialt in range(sgm_toa.shape[0]):
+            for iact in range(sgm_toa.shape[1]):
+                cs = interp1d(sgm_wv, sgm_toa[ialt, iact, :], fill_value=(0, 0), bounds_error=False)
+                sgm_inter = cs(wv_isrf)
+                # multiply it the sgm_inter by normalized isrf then sum up and assign  to output pixel
+
+                toa[ialt, iact] = np.sum(sgm_inter )
+
+
+
         return toa
 
 

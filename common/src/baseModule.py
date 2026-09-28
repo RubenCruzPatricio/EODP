@@ -51,9 +51,12 @@ class baseModule:
             raise Exception('Check the auxililary path and the logconf in the Global configuration. '
                             'File not found: ' + logstr)
 
-        outlog = outdir + os.path.sep + modulestr + '.log'
-        logging.config.fileConfig(logstr,
-                                  defaults={'logfilename': outlog})
+        outlog = os.path.join(outdir, modulestr + '.log')
+        outlog = outlog.replace('\\', '/')
+
+        logging.config.fileConfig(
+            logstr,
+            defaults={'logfilename': outlog})
         self.logger = logging.getLogger(self.modulestr)
 
         # Get constants
