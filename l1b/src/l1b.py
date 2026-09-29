@@ -64,7 +64,7 @@ class l1b(initL1b):
         """
 
         #TODO
-        toa = (toa - eq_add) / eq_mult
+        toa= (toa-eq_add)/eq_mult
         return toa
 
     def restoration(self,toa,gain):
@@ -77,7 +77,7 @@ class l1b(initL1b):
         #TODO
         # multiply toa by gain and assign to toa
 
-        toa = toa * gain
+        toa= toa*gain
         self.logger.debug('Sanity check. TOA in radiances after gain application ' + str(toa[1,-1]) + ' [mW/m2/sr]')
 
         return toa
