@@ -94,22 +94,22 @@ class mtf:
         :return fnAct: 1D normalised frequencies 2D ACT (f/(1/w))
         :return fnAlt: 1D normalised frequencies 2D ALT (f/(1/w))
         """
-        #TODO
-        fstepAlt = 1 / nlines / w
-        fstepAct = 1 / ncolumns / w
+        fstepAlt= 1/nlines/ w
+        fstepAct = 1/ncolumns/w
 
-        eps = 1e-6
-        fAlt = np.arange(-1 / (2 * w), 1 / (2 * w) - eps, fstepAlt)
-        fAct = np.arange(-1 / (2 * w), 1 / (2 * w) - eps, fstepAct)
+        eps= 1e-6
+        fAlt= np.arange(-1/(2*w), 1/(2*w)-eps, fstepAlt)
+        fAct= np.arange(-1/(2*w), 1/(2*w)-eps, fstepAct)
 
-        [fAltxx, fActxx] = np.meshgrid(fAlt, fAct,indexing='ij')  # Please use ‘ij’ indexing or you will get the transpose
-        f2D = np.sqrt(fAltxx * fAltxx + fActxx * fActxx)
+        [fAltxx, fActxx]= np.meshgrid(fAlt, fAct, indexing='ij')
+        f2D= np.sqrt(fAltxx* fAltxx+fActxx*fActxx)
 
-        fc=(D/(lambd*focal))
+        fc= D /(lambd*focal)
+
         fn2D= f2D/(1/w)
-        fr2D= f2D/(fc)
-        fnAct= fAct/(1/w)
-        fnAlt= fAlt/(1/w)
+        fr2D= f2D/fc
+        fnAct= fAlt/(1/w)
+        fnAlt= fAct/(1/w)
 
         # TO DO : compare with output file (fr2D) somewhere in the files of eodp
         return fn2D, fr2D, fnAct, fnAlt
@@ -120,9 +120,8 @@ class mtf:
         :param fr2D: 2D relative frequencies (f/fc), where fc is the optics cut-off frequency
         :return: diffraction MTF
         """
-        #TODO
 
-        Hdiff = (2/pi)(arccos(fr2D)-(fr2D)(1-(fr2D)^2)^0.5)
+        Hdiff= (2/pi)*(arccos(fr2D)-(fr2D)(1-(fr2D)**2)**(1/2))
 
         return Hdiff
 
@@ -136,9 +135,9 @@ class mtf:
         :param D: Telescope diameter [m]
         :return: Defocus MTF
         """
-        #TODO
 
-        x= pi*defocus*fr2D(1-fr2D)
+        x= pi*defocus*fr2D*(1-fr2D)
+        j1(x)== x/2-x**3/16+x**5/384-x**7/18432
         Hdefoc= ((2*j1(x))/x)
 
 
@@ -155,7 +154,9 @@ class mtf:
         :param wHF: RMS of high-frequency wavefront errors [m]
         :return: WFE Aberrations MTF
         """
-        #TODO
+
+        Hwfe= np.exp(-fr2D*(1-fr2D)*(kLF*(wLF/lambd)**2+kHF*(wHF/lambd)**2))
+
         return Hwfe
 
     def mtfDetector(self,fn2D):
@@ -164,9 +165,8 @@ class mtf:
         :param fnD: 2D normalised frequencies (f/(1/w))), where w is the pixel width
         :return: detector MTF
         """
-        #TODO
-        
 
+        Hdet= np.sinc(fn2D)
 
         return Hdet
 
@@ -178,7 +178,9 @@ class mtf:
         :param ksmear: Amplitude of low-frequency component for the motion smear MTF in ALT [pixels]
         :return: Smearing MTF
         """
-        #TODO
+
+        Hsmear= np.sinc(ksmear*fnAlt)
+
         return Hsmear
 
     def mtfMotion(self, fn2D, kmotion):
@@ -188,7 +190,8 @@ class mtf:
         :param kmotion: Amplitude of high-frequency component for the motion smear MTF in ALT and ACT
         :return: detector MTF
         """
-        #TODO
+        Hmotion= np.sinc(kmotion*fn2D)
+
         return Hmotion
 
     def plotMtf(self,Hdiff, Hdefoc, Hwfe, Hdet, Hsmear, Hmotion, Hsys, nlines, ncolumns, fnAct, fnAlt, directory, band):
