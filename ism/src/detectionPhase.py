@@ -106,7 +106,7 @@ class detectionPhase(initIsm):
         :return: Toa in photons
         """
 
-        Ein= toa*area_pix*tint
+        Ein= toa*area_pix*tint*1e-3
 
         h= self.constants.h_planck
         c= self.constants.speed_light
@@ -142,7 +142,9 @@ class detectionPhase(initIsm):
         :param dead_pix_red: Reduction in the quantum efficiency for the dead pixels [-, over 1]
         :return: toa in e- including bad & dead pixels
         """
-        #TODO
+
+
+
         return toa
 
     def prnu(self, toa, kprnu):
@@ -153,7 +155,7 @@ class detectionPhase(initIsm):
         :return: TOA after adding PRNU [e-]
         """
 
-        PRNU= np.random.standard_normal(toa.shape[1])*kprnu
+        PRNU=  np.random.normal(0,1,toa.shape[1])*kprnu
         toa= toa*(1+PRNU)
 
         return toa
@@ -171,7 +173,7 @@ class detectionPhase(initIsm):
         :return: TOA in [e-] with dark signal
         """
 
-        DSNU= np.abs(np.random.standard_normal(toa.shape[1]))*kdsnu
+        DSNU= np.abs(np.random.normal(0,1,toa.shape[1]))*kdsnu
         Sd= ds_A_coeff*((T/Tref))**3*exp(-ds_B_coeff*(1/T-1/Tref))
         DS= Sd*(1+DSNU)
         toa= toa+DS
