@@ -123,7 +123,11 @@ class detectionPhase(initIsm):
         :return: toa in electrons
         """
 
+        FWC= self.ismConfig.FWC
         toae= toa*QE
+
+        if toae>FWC:
+            toae= FWC
 
         return toae
 
@@ -148,7 +152,7 @@ class detectionPhase(initIsm):
         :return: TOA after adding PRNU [e-]
         """
 
-        PRNU= np.random.standard_normal(toa)*kprnu
+        PRNU= np.random.standard_normal(toa.shape[1])*kprnu
         toa= toa*(1+PRNU)
 
         return toa
