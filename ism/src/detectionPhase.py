@@ -147,7 +147,10 @@ class detectionPhase(initIsm):
         :param kprnu: multiplicative factor to the standard normal deviation for the PRNU
         :return: TOA after adding PRNU [e-]
         """
-        #TODO
+
+        PRNU= np.random.standard_normal(toa)*kprnu
+        toa= toa*(1+PRNU)
+
         return toa
 
 
