@@ -1,3 +1,4 @@
+from cmath import exp
 
 from ism.src.initIsm import initIsm
 import numpy as np
@@ -169,5 +170,10 @@ class detectionPhase(initIsm):
         :param ds_B_coeff: Empirical parameter of the model 6040 K
         :return: TOA in [e-] with dark signal
         """
-        #TODO
+
+        DSNU= np.abs(np.random.standard_normal(toa.shape[1]))*kdsnu
+        Sd= ds_A_coeff*((T/Tref))**3*exp(-ds_B_coeff*(1/T-1/Tref))
+        DS= Sd*(1+DSNU)
+        toa= toa+DS
+
         return toa
