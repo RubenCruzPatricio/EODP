@@ -93,8 +93,9 @@ class opticalPhase(initIsm):
         :param Tr: Optical transmittance [-]
         :return: TOA image in irradiances [mW/m2]
         """
-        # TODO
+
         toa= toa*Tr*(1/4)*np.pi*(D/f)**2
+
         return toa
 
 
@@ -107,7 +108,10 @@ class opticalPhase(initIsm):
         """
 
         GE= fft2(toa)
-        fftshift(Hsys)
+        Hsys_shifted= fftshift(Hsys)
+        GE_MTF= GE*Hsys_shifted
+        toa_ft= ifft2(GE_MTF)
+        toa_ft= np.real(toa_ft)
 
         return toa_ft
 
@@ -129,7 +133,7 @@ class opticalPhase(initIsm):
             isrf = isrf/np.sum(isrf)
 
         #Wavelenght (nm)
-        wv_isrf = wv_isrf * 1000
+        wv_isrf = wv_isrf*1000
 
 
         for ialt in range(sgm_toa.shape[0]):
@@ -141,5 +145,3 @@ class opticalPhase(initIsm):
 
 
         return toa
-
-

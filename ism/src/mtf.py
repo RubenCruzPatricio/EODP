@@ -108,8 +108,8 @@ class mtf:
 
         fn2D= f2D/(1/w)
         fr2D= f2D/fc
-        fnAct= fAlt/(1/w)
-        fnAlt= fAct/(1/w)
+        fnAct= fAct/(1/w)
+        fnAlt= fAlt/(1/w)
 
         # TO DO : compare with output file (fr2D) somewhere in the files of eodp
         return fn2D, fr2D, fnAct, fnAlt
@@ -139,7 +139,6 @@ class mtf:
         x= pi*defocus*fr2D*(1-fr2D)
         j1(x)== x/2-x**3/16+x**5/384-x**7/18432
         Hdefoc= ((2*j1(x))/x)
-
 
         return Hdefoc
 
@@ -212,6 +211,30 @@ class mtf:
         :param band: band
         :return: N/A
         """
-        #TODO
+
+        plt.figure()
+
+        center_line = nlines // 2
+
+        plt.plot(fnAct, Hdiff[center_line, :], label='Diffraction')
+        plt.plot(fnAct, Hdefoc[center_line, :], label='Defocus')
+        plt.plot(fnAct, Hwfe[center_line, :], label='WFE')
+        plt.plot(fnAct, Hdet[center_line, :], label='Detector')
+        plt.plot(fnAct, Hsmear[center_line, :], label='Smearing')
+        plt.plot(fnAct, Hmotion[center_line, :], label='Motion')
+        plt.plot(fnAct, Hsys[center_line, :], label='System')
+
+        plt.xlabel('Normalized spatial frequency')
+        plt.ylabel('MTF')
+        plt.title('MTF - ' + band)
+
+        plt.grid()
+        plt.legend()
+
+        plt.ylim(0, 1.05)
+
+        output_file = os.path.join(directory, 'MTF_' + band + '.png')
+        plt.savefig(output_file)
+        plt.close()
 
 
