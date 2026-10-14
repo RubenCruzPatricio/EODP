@@ -1,7 +1,7 @@
 
 # MAIN FUNCTION TO CALL THE ISM MODULE
 
-from ism.src.ism import ism
+from ism.src.ism_main import ism
 
 # Directory - this is the common directory for the execution of the E2E, all modules
 auxdir = r'C:\\Users\\rubik\\OneDrive\\Escritorio\\Master\\5 Semisemestre\\EODP\\auxiliary'

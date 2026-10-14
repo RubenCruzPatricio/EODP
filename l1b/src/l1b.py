@@ -63,7 +63,6 @@ class l1b(initL1b):
         :return: TOA in DN, equalized
         """
 
-        #TODO
         toa= (toa-eq_add)/eq_mult
         return toa
 
@@ -74,8 +73,6 @@ class l1b(initL1b):
         :param gain: gain in [rad/DN]
         :return: TOA in radiances [mW/sr/m2]
         """
-        #TODO
-        # multiply toa by gain and assign to toa
 
         toa= toa*gain
         self.logger.debug('Sanity check. TOA in radiances after gain application ' + str(toa[1,-1]) + ' [mW/m2/sr]')
@@ -83,5 +80,13 @@ class l1b(initL1b):
         return toa
 
     def plotL1bToa(self, toa_l1b, outputdir, band):
-        #TODO
-        a=1 # dummy
+
+        mid_value = int(toa_l1b.shape[0] / 2)
+        fig, ax = plt.subplots()
+        ax.plot(toa_l1b[mid_value, :], 'k')
+        plt.suptitle('TOA_l1b')
+        plt.xlabel('Across Track [-]')
+        plt.ylabel('Radiances [mW/m2/sr]')
+        plt.grid(True)
+        plt.show
+        fig.savefig(outputdir + '/l1b_toa_' + band + '_graph.png')

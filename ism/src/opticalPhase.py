@@ -11,6 +11,7 @@ from common.plot.plotMat2D import plotMat2D
 from common.plot.plotF import plotF
 from scipy.signal import convolve2d
 from common.src.auxFunc import getIndexBand
+from config.globalConfig import globalConfig
 
 class opticalPhase(initIsm):
 
@@ -123,25 +124,22 @@ class opticalPhase(initIsm):
         :param band: band
         :return: TOA image 2D in radiances [mW/m2]
         """
-        ## TODO how to normalize isrf ?, area of isrf needs to be one
 
         isrf, wv_isrf = readIsrf(self.auxdir + '/' + self.ismConfig.isrffile, band)
 
         toa = np.zeros((sgm_toa.shape[0],sgm_toa.shape[1]))
 
         #Normalize
-            isrf = isrf/np.sum(isrf)
+
+        isrf = isrf/np.sum(isrf)
 
         #Wavelenght (nm)
         wv_isrf = wv_isrf*1000
-
 
         for ialt in range(sgm_toa.shape[0]):
             for iact in range(sgm_toa.shape[1]):
                 cs= interp1d(sgm_wv, sgm_toa[ialt, iact, :], fill_value=(0, 0), bounds_error=False)
                 sgm_inter= cs(wv_isrf)
                 toa[ialt, iact]= np.sum(sgm_inter*isrf)
-
-
 
         return toa
