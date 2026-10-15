@@ -127,8 +127,7 @@ class detectionPhase(initIsm):
         FWC= self.ismConfig.FWC
         toae= toa*QE
 
-        if toae>FWC:
-            toae= FWC
+        toae = np.minimum(toae, FWC)
 
         return toae
 

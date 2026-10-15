@@ -72,7 +72,9 @@ class mtf:
 
         # Calculate the System MTF
         self.logger.debug("Calculation of the Sysmtem MTF by multiplying the different contributors")
-        Hsys = 1 # dummy
+
+        Hsys= Hdiff*Hdefoc*Hwfe*Hdet*Hsmear*Hmotion
+
 
         # Plot cuts ACT/ALT of the MTF
         self.plotMtf(Hdiff, Hdefoc, Hwfe, Hdet, Hsmear, Hmotion, Hsys, nlines, ncolumns, fnAct, fnAlt, directory, band)
@@ -102,12 +104,11 @@ class mtf:
         fAct= np.arange(-1/(2*w), 1/(2*w)-eps, fstepAct)
 
         [fAltxx, fActxx]= np.meshgrid(fAlt, fAct, indexing='ij')
-        f2D= np.sqrt(fAltxx* fAltxx+fActxx*fActxx)
+        fn2D= np.sqrt(fAltxx* fAltxx+fActxx*fActxx)
 
         fc= D /(lambd*focal)
 
-        fn2D= f2D/(1/w)
-        fr2D= f2D/fc
+        fr2D= fn2D*(1/w)/fc
         fnAct= fAct/(1/w)
         fnAlt= fAlt/(1/w)
 
@@ -121,7 +122,15 @@ class mtf:
         :return: diffraction MTF
         """
 
-        Hdiff= (2/pi)*(arccos(fr2D)-(fr2D)(1-(fr2D)**2)**(1/2))
+        Hdiff= np.zeros((fr2D.shape[0], fr2D.shape[1]))
+        for i in range(fr2D.shape[0]):
+            for j in range(fr2D.shape[1]):
+                if fr2D[i, j] < 1:
+                    Hdiff[i, j]= 2/np.pi*(np.arccos(fr2D[i, j])-fr2D[i,j]*np.sqrt((1-(fr2D[i,j]) *fr2D[i,j])))
+                else:
+                    Hdiff[i, j]= 0.
+
+        Hdiff= Hdiff
 
         return Hdiff
 
@@ -178,7 +187,11 @@ class mtf:
         :return: Smearing MTF
         """
 
-        Hsmear= np.sinc(ksmear*fnAlt)
+        Hsmear= np.zeros((fnAlt.shape[0], ncolumns))
+
+        HS_d= np.sinc(fnAlt*ksmear*np.pi)
+        for i in range(ncolumns):
+            Hsmear[:, i] = HS_d
 
         return Hsmear
 
