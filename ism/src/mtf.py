@@ -146,8 +146,8 @@ class mtf:
         """
 
         x= pi*defocus*fr2D*(1-fr2D)
-        j1(x)== x/2-x**3/16+x**5/384-x**7/18432
-        Hdefoc= ((2*j1(x))/x)
+        J1= x/2-x**3/16+x**5/384-x**7/18432
+        Hdefoc= ((2*J1)/x)
 
         return Hdefoc
 
@@ -189,7 +189,7 @@ class mtf:
 
         Hsmear= np.zeros((fnAlt.shape[0], ncolumns))
 
-        HS_d= np.sinc(fnAlt*ksmear*np.pi)
+        HS_d= np.sinc(fnAlt*ksmear)
         for i in range(ncolumns):
             Hsmear[:, i] = HS_d
 
@@ -225,7 +225,7 @@ class mtf:
         :return: N/A
         """
 
-        plt.figure()
+        """ plt.figure()
 
         center_line = nlines // 2
 
@@ -249,5 +249,73 @@ class mtf:
         output_file = os.path.join(directory, 'MTF_' + band + '.png')
         plt.savefig(output_file)
         plt.close()
+        """
+
+        halfAct = int(np.floor(fnAct.shape[0]/2))
+        halfAlt = int(np.floor(fnAlt.shape[0]/2))
+        fig, ax = plt.subplots()
+        plt.suptitle('Alt = '+str(halfAlt) + ' for ' +band)
+        x_1 = fnAct[halfAct:]
+        y_1 = Hdiff[halfAlt,halfAct:]
+        y_2 = Hdefoc[halfAlt,halfAct:]
+        y_3 = Hwfe[halfAlt,halfAct:]
+        y_4 = Hdet[halfAlt,halfAct:]
+        y_5 = Hsmear[halfAlt,halfAct:]
+        y_6 = Hmotion[halfAlt,halfAct:]
+        y_7 = Hsys[halfAlt,halfAct:]
+        ax.plot(x_1, y_1, 'r', label='Hdiff')
+        ax.plot(x_1, y_2, 'g', label='Hdefoc')
+        ax.plot(x_1, y_3, 'b', label='Hwfe')
+        ax.plot(x_1, y_4, 'k', label='Hdet')
+        ax.plot(x_1, y_5, 'y', label='Hsmear')
+        ax.plot(x_1, y_6, 'r', label='Hmotion')
+        ax.plot(x_1, y_7, 'g', label='Hsys')
+        plt.legend(loc='lower left')
+        plt.xlabel('Spatial Frequencies [-]')
+        plt.ylabel('MTF')
+        plt.grid(True)
+        #plt.show()
+        fig.savefig(self.outdir+'/graph_mtf_alt_'+band+'_graph.png')
+
+        fig2, ax2 = plt.subplots()
+        x_2 = fnAlt[halfAlt:]
+        y_1 = Hdiff[halfAlt:,halfAct]
+        y_2 = Hdefoc[halfAlt:,halfAct]
+        y_3 = Hwfe[halfAlt:,halfAct]
+        y_4 = Hdet[halfAlt:,halfAct]
+        y_5 = Hsmear[halfAlt:,halfAct]
+        y_6 = Hmotion[halfAlt:,halfAct]
+        y_7 = Hsys[halfAlt:,halfAct]
+
+        a = 'Act = '+str(halfAct) +' for '+band
+        plt.suptitle(a)
+        plt.grid(True)
+        plt.xlabel('Spatial Frequencies [-]')
+        plt.ylabel('MTF')
+        ax2.plot(x_2, y_1, 'r', label='Hdiff')
+        ax2.plot(x_2, y_2, 'g', label='Hdefoc')
+        ax2.plot(x_2, y_3, 'b', label='Hwfe')
+        ax2.plot(x_2, y_4, 'k', label='Hdet')
+        ax2.plot(x_2, y_5, 'y', label='Hsmear')
+        ax2.plot(x_2, y_6, 'r', label='Hmotion')
+        ax2.plot(x_2, y_7, 'g', label='Hsys')
+        plt.legend(loc='lower left')
+        #plt.show()
+        fig2.savefig(self.outdir+'/graph_mtf_act_'+band+'_graph.png')
 
 
+
+        writeMat(self.outdir,"Hsys",Hsys)
+        writeMat(self.outdir,"Hdet",Hdet)
+
+"""
+        if band == 'VNIR-0':
+            file = open('/home/luss/my_shared_folder/lib_out_ism/mtf_nyquist.txt','w')
+            file.truncate(0)
+            file.close()
+
+        with open('/home/luss/my_shared_folder/lib_out_ism/mtf_nyquist.txt', 'a') as the_file:
+            the_file.write(band+'\n')
+            the_file.write('mtf_nyquist Act' + '=' + str(Hsys[0,halfAct])+'\n')
+            the_file.write('mtf_nyquist Alt' + '=' + str(Hsys[halfAlt,0])+'\n')
+            """

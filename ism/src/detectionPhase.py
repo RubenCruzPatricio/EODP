@@ -1,5 +1,3 @@
-from cmath import exp
-
 from ism.src.initIsm import initIsm
 import numpy as np
 from common.io.writeToa import writeToa
@@ -173,7 +171,7 @@ class detectionPhase(initIsm):
         """
 
         DSNU= np.abs(np.random.normal(0,1,toa.shape[1]))*kdsnu
-        Sd= ds_A_coeff*((T/Tref))**3*exp(-ds_B_coeff*(1/T-1/Tref))
+        Sd= ds_A_coeff*((T/Tref))**3*np.exp(-ds_B_coeff*(1/T-1/Tref))
         DS= Sd*(1+DSNU)
         toa= toa+DS
 
