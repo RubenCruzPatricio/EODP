@@ -9,6 +9,7 @@ from scipy.interpolate import bisplrep, bisplev
 import matplotlib.pyplot as plt
 from common.io.l1cProduct import writeL1c
 from matplotlib import cm
+from scipy.interpolate import griddata
 
 class l1c(initL1c):
 
@@ -61,25 +62,25 @@ class l1c(initL1c):
         :param band: band
         :return: L1C radiances, L1C latitude and longitude in degrees
         '''
-        tck= bisplrep(lat,lon,toa)
-
         m= mgrs.MGRS()
         mgrs_tiles= set()
 
-        for i in range (lat.shape[0]):
-            for j in range(toa.shape[0]):
-                aux= m.toMGRS(lat[i,j],lon[i,j], MGRSPrecision= self.l1cConfig.mgrs_tile_precision)
-                mgrs_tiles.add(aux)
+        for i in range(lat.shape[0]):
+            for j in range(lat.shape[1]):
+                tile= str(m.toMGRS(lat[i,j], lon[i,j], True,self.l1cConfig.mgrs_tile_precision))
+                mgrs_tiles.add(tile)
 
         mgrs_tiles= list(mgrs_tiles)
 
+        lat_l1c= np.zeros(len(mgrs_tiles))
         lon_l1c= np.zeros(len(mgrs_tiles))
-        lat_l1c = np.zeros(len(mgrs_tiles))
         toa_l1c= np.zeros(len(mgrs_tiles))
 
         for k in range(len(mgrs_tiles)):
-            lat_l1c[k], lon_l1c[k]= m.toLatLon(mgrs_tiles[k])
-            toa_l1c[k]= bisplev(lat_l1c[k],lon_l1c[k],tck)
+            lat_l1c[k], lon_l1c[k]= m.toLatLon(mgrs_tiles[k],True)
+
+        toa_l1c= griddata((lat.ravel(),lon.ravel()),toa.ravel(),(lat_l1c, lon_l1c), method='cubic', rescale=True)
+        toa_l1c= np.nan_to_num(toa_l1c)
 
         return lat_l1c, lon_l1c, toa_l1c
 
