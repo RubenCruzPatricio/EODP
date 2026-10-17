@@ -140,7 +140,7 @@ class detectionPhase(initIsm):
         :return: toa in e- including bad & dead pixels
         """
 
-
+        toa[:,5]= toa[:,5]*(1-bad_pix_red)
 
         return toa
 

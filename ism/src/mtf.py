@@ -1,7 +1,5 @@
 from math import pi
-
 from numpy.ma.core import arccos
-
 from config.ismConfig import ismConfig
 import numpy as np
 import math
@@ -48,6 +46,7 @@ class mtf:
         self.logger.info("Calculation of the System MTF")
 
         # Calculate the 2D relative frequencies
+
         self.logger.debug("Calculation of 2D relative frequencies")
         fn2D, fr2D, fnAct, fnAlt = self.freq2d(nlines, ncolumns, D, lambd, focal, pix_size)
 
@@ -103,14 +102,14 @@ class mtf:
         fAlt= np.arange(-1/(2*w), 1/(2*w)-eps, fstepAlt)
         fAct= np.arange(-1/(2*w), 1/(2*w)-eps, fstepAct)
 
-        [fAltxx, fActxx]= np.meshgrid(fAlt, fAct, indexing='ij')
+        fnAct= fAct / (1 / w)
+        fnAlt= fAlt / (1 / w)
+
+        [fAltxx, fActxx]= np.meshgrid(fnAlt, fnAct, indexing='ij')
         fn2D= np.sqrt(fAltxx* fAltxx+fActxx*fActxx)
 
         fc= D /(lambd*focal)
-
         fr2D= fn2D*(1/w)/fc
-        fnAct= fAct/(1/w)
-        fnAlt= fAlt/(1/w)
 
         # TO DO : compare with output file (fr2D) somewhere in the files of eodp
         return fn2D, fr2D, fnAct, fnAlt
@@ -147,7 +146,7 @@ class mtf:
 
         x= pi*defocus*fr2D*(1-fr2D)
         J1= x/2-x**3/16+x**5/384-x**7/18432
-        Hdefoc= ((2*J1)/x)
+        Hdefoc= np.where(x==0,1.0,2* J1/np.where(x==0,1,x))
 
         return Hdefoc
 
