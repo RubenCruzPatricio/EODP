@@ -5,7 +5,7 @@ from ism.src.ism_main import ism
 
 # Directory - this is the common directory for the execution of the E2E, all modules
 auxdir = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\auxiliary"
-indir = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-ISM\input\gradient_alt100_act150"
+indir = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-ISM\input"
 outdir = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-ISM\output_ruben"
 
 # Initialise the ISM
