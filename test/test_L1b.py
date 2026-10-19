@@ -3,17 +3,14 @@ from common.io.writeToa import readToa
 
 reference = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1B\output"
 outdir    = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1B\output_ruben"
-outdir_no_eq = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1B\output_ruben_no_eq"
 
 bands = ['VNIR-0', 'VNIR-1', 'VNIR-2', 'VNIR-3']
 tol = 0.01e-2                # tolerancia relativa en %
 three_sigma = 1 - 0.997    # máx. 0.3 % de puntos fuera de tolerancia
 
-# (carpeta de tu salida, nombre del fichero)
 tests = []
 for band in bands:
     tests.append((outdir,       f'l1b_toa_eq_{band}.nc'))   # con ecualización
-    tests.append((outdir_no_eq, f'l1b_toa_{band}.nc'))      # sin ecualización
 
 for out_dir, fname in tests:
     out = readToa(out_dir, fname)

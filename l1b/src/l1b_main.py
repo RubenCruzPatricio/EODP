@@ -67,7 +67,7 @@ class l1b(initL1b):
         for ialt in range(toa.shape[0]):
             toa_out[ialt, :] = (toa[ialt, :] - eq_add) / eq_mult
 
-        return toa
+        return toa_out
 
     def restoration(self,toa,gain):
         """

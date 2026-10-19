@@ -9,7 +9,8 @@ from scipy.interpolate import bisplrep, bisplev
 import matplotlib.pyplot as plt
 from common.io.l1cProduct import writeL1c
 from matplotlib import cm
-from scipy.interpolate import griddata
+import sys, scipy, numpy
+print(sys.version, scipy.__version__, numpy.__version__)
 
 class l1c(initL1c):
 
@@ -62,6 +63,9 @@ class l1c(initL1c):
         :param band: band
         :return: L1C radiances, L1C latitude and longitude in degrees
         '''
+
+        tck = bisplrep(lat, lon, toa)
+
         m= mgrs.MGRS()
         mgrs_tiles= set()
 
@@ -77,10 +81,8 @@ class l1c(initL1c):
         toa_l1c= np.zeros(len(mgrs_tiles))
 
         for k in range(len(mgrs_tiles)):
-            lat_l1c[k], lon_l1c[k]= m.toLatLon(mgrs_tiles[k],True)
-
-        toa_l1c= griddata((lat.ravel(),lon.ravel()),toa.ravel(),(lat_l1c, lon_l1c), method='cubic', rescale=True)
-        toa_l1c= np.nan_to_num(toa_l1c)
+            lat_l1c[k], lon_l1c[k] = m.toLatLon(mgrs_tiles[k], True)
+            toa_l1c[k] = bisplev(lat_l1c[k], lon_l1c[k], tck)
 
         return lat_l1c, lon_l1c, toa_l1c
 
