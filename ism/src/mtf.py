@@ -77,7 +77,7 @@ class mtf:
 
         # Plot cuts ACT/ALT of the MTF
         self.plotMtf(Hdiff, Hdefoc, Hwfe, Hdet, Hsmear, Hmotion, Hsys, nlines, ncolumns, fnAct, fnAlt, directory, band)
-
+        self.plotMtf2D(Hsys, band)
 
         return Hsys
 
@@ -111,7 +111,6 @@ class mtf:
         fc= D /(lambd*focal)
         fr2D= fn2D*(1/w)/fc
 
-        # TO DO : compare with output file (fr2D) somewhere in the files of eodp
         return fn2D, fr2D, fnAct, fnAlt
 
     def mtfDiffract(self,fr2D):
@@ -224,32 +223,6 @@ class mtf:
         :return: N/A
         """
 
-        """ plt.figure()
-
-        center_line = nlines // 2
-
-        plt.plot(fnAct, Hdiff[center_line, :], label='Diffraction')
-        plt.plot(fnAct, Hdefoc[center_line, :], label='Defocus')
-        plt.plot(fnAct, Hwfe[center_line, :], label='WFE')
-        plt.plot(fnAct, Hdet[center_line, :], label='Detector')
-        plt.plot(fnAct, Hsmear[center_line, :], label='Smearing')
-        plt.plot(fnAct, Hmotion[center_line, :], label='Motion')
-        plt.plot(fnAct, Hsys[center_line, :], label='System')
-
-        plt.xlabel('Normalized spatial frequency')
-        plt.ylabel('MTF')
-        plt.title('MTF - ' + band)
-
-        plt.grid()
-        plt.legend()
-
-        plt.ylim(0, 1.05)
-
-        output_file = os.path.join(directory, 'MTF_' + band + '.png')
-        plt.savefig(output_file)
-        plt.close()
-        """
-
         halfAct = int(np.floor(fnAct.shape[0]/2))
         halfAlt = int(np.floor(fnAlt.shape[0]/2))
         fig, ax = plt.subplots()
@@ -302,19 +275,20 @@ class mtf:
         #plt.show()
         fig2.savefig(self.outdir+'/graph_mtf_act_'+band+'_graph.png')
 
-
-
         writeMat(self.outdir,"Hsys",Hsys)
         writeMat(self.outdir,"Hdet",Hdet)
 
-"""
-        if band == 'VNIR-0':
-            file = open('/home/luss/my_shared_folder/lib_out_ism/mtf_nyquist.txt','w')
-            file.truncate(0)
-            file.close()
-
-        with open('/home/luss/my_shared_folder/lib_out_ism/mtf_nyquist.txt', 'a') as the_file:
-            the_file.write(band+'\n')
-            the_file.write('mtf_nyquist Act' + '=' + str(Hsys[0,halfAct])+'\n')
-            the_file.write('mtf_nyquist Alt' + '=' + str(Hsys[halfAlt,0])+'\n')
-            """
+    def plotMtf2D(self, Hsys, band):
+        """"
+        2D map of the system MTF
+        :param Hsys: System MTF (nlines x ncolumns)
+        :param band: band
+        """
+        fig, ax = plt.subplots(figsize=(20, 10))
+        im = ax.imshow(Hsys, origin='lower', cmap='jet')
+        ax.set_title('System MTF for ' + band, fontsize=20)
+        ax.set_xlabel('ACT', fontsize=16)
+        ax.set_ylabel('ALT', fontsize=16)
+        fig.colorbar(im, ax=ax)
+        fig.savefig(self.outdir + '/system_mtf_2d_' + band + '.png')
+        plt.close(fig)
