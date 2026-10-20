@@ -84,6 +84,24 @@ class l1c(initL1c):
             lat_l1c[k], lon_l1c[k] = m.toLatLon(mgrs_tiles[k], True)
             toa_l1c[k] = bisplev(lat_l1c[k], lon_l1c[k], tck)
 
+        plt.figure(figsize=(12, 6))
+
+        plt.plot(lon[0, :], lat[0, :], 'k-')
+        plt.plot(lon[-1, :], lat[-1, :], 'k-')
+        plt.plot(lon[:, 0], lat[:, 0], 'k-')
+        plt.plot(lon[:, -1], lat[:, -1], 'k-', label='L1B')
+
+        plt.plot(lon_l1c, lat_l1c, 'r.', label='L1C MGRS')
+
+        plt.title('Projection on ground')
+        plt.xlabel('Longitude [deg]')
+        plt.ylabel('Latitude [deg]')
+        plt.grid()
+        plt.legend()
+
+        plt.savefig(self.outdir + '/footprint_VNIR.png')
+        plt.close()
+
         return lat_l1c, lon_l1c, toa_l1c
 
     def checkSize(self, lat,toa):
