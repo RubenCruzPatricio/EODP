@@ -5,12 +5,12 @@ reference = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP
 outdir    = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1B\output_ruben"
 
 bands = ['VNIR-0', 'VNIR-1', 'VNIR-2', 'VNIR-3']
-tol = 0.01e-2                # tolerancia relativa en %
-three_sigma = 1 - 0.997    # máx. 0.3 % de puntos fuera de tolerancia
+tol= 0.01e-3
+three_sigma = 1 - 0.997
 
 tests = []
 for band in bands:
-    tests.append((outdir,       f'l1b_toa_eq_{band}.nc'))   # con ecualización
+    tests.append((outdir,       f'l1b_toa_eq_{band}.nc'))
 
 for out_dir, fname in tests:
     out = readToa(out_dir, fname)

@@ -5,7 +5,7 @@ reference = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP
 outdir    = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1C\output_ruben"
 
 bands = ['VNIR-0', 'VNIR-1', 'VNIR-2', 'VNIR-3']
-tol = 0.01e-2
+tol = 0.01e-3
 three_sigma = 1 - 0.997
 
 tests = [f'l1c_toa_{band}.nc' for band in bands]

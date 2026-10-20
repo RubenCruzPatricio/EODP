@@ -5,8 +5,8 @@ reference = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP
 outdir    = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-ISM\output_ruben"
 
 bands = ['VNIR-0', 'VNIR-1', 'VNIR-2', 'VNIR-3']
-tol = 0.01e-2              # tolerancia relativa en %
-three_sigma = 1 - 0.997    # máx. 0.3 % de puntos fuera de tolerancia
+tol = 0.01e-3
+three_sigma = 1 - 0.997
 
 # Prefijos de los ficheros a comparar
 prefixes = ['optical', 'isrf', 'e', 'ds', 'detection', 'prnu']
