@@ -88,9 +88,9 @@ class l1b(initL1b):
     def plotL1bToa(self, toa_eq, toa_noeq, toa_isrf, outputdir, band):
         mid = int(toa_eq.shape[0] / 2)
         fig, ax = plt.subplots()
-        ax.plot(toa_noeq[mid, :], label='Non-equalised')
-        ax.plot(toa_eq[mid, :], 'k', label='Equalised')
-        ax.plot(toa_isrf[mid, :], 'r--', label='ISRF')
+        #ax.plot(toa_noeq[mid, :], label='Non-equalised')
+        #ax.plot(toa_eq[mid, :], 'k', label='Equalised')
+        ax.plot(toa_isrf[mid, :], 'r-', label='ISRF')
         ax.set_title(band)
         ax.set_xlabel('Across Track [-]')
         ax.set_ylabel('TOA [mW/m2/sr]')
