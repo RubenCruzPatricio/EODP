@@ -25,6 +25,8 @@ class l1b(initL1b):
             # Read TOA - output of the ISM in Digital Numbers
             # -------------------------------------------------------------------------------
             toa = readToa(self.indir, self.globalConfig.ism_toa + band + '.nc')
+            gain = self.l1bConfig.gain[getIndexBand(band)]
+            toa_noeq = self.restoration(toa, gain)
 
             # Equalization (radiometric correction)
             # -------------------------------------------------------------------------------
@@ -47,7 +49,8 @@ class l1b(initL1b):
             # Write output TOA
             # -------------------------------------------------------------------------------
             writeToa(self.outdir, self.globalConfig.l1b_toa + band, toa)
-            self.plotL1bToa(toa, self.outdir, band)
+            toa_isrf = readToa(self.indir, 'ism_toa_isrf_' + band + '.nc')  # truth
+            self.plotL1bToa(toa, toa_noeq, toa_isrf, self.outdir, band)
 
             self.logger.info("End of BAND " + band)
 
@@ -82,14 +85,17 @@ class l1b(initL1b):
 
         return toa
 
-    def plotL1bToa(self, toa_l1b, outputdir, band):
-
-        mid_value = int(toa_l1b.shape[0] / 2)
+    def plotL1bToa(self, toa_eq, toa_noeq, toa_isrf, outputdir, band):
+        mid = int(toa_eq.shape[0] / 2)
         fig, ax = plt.subplots()
-        ax.plot(toa_l1b[mid_value, :], 'k')
+        ax.plot(toa_noeq[mid, :], label='Non-equalised')
+        ax.plot(toa_eq[mid, :], 'k', label='Equalised')
+        ax.plot(toa_isrf[mid, :], 'r--', label='Truth (ism_toa_isrf)')
         ax.set_title(band)
-        plt.xlabel('Across Track [-]')
-        plt.ylabel('TOA [mW/m2/sr]')
-        plt.grid(True)
-        plt.show
-        fig.savefig(outputdir + '/l1b_toa_' + band + '_graph.png')
+        ax.set_xlabel('Across Track [-]')
+        ax.set_ylabel('TOA [mW/m2/sr]')
+        ax.grid(True)
+        ax.legend()
+        os.makedirs(outputdir, exist_ok=True)
+        fig.savefig(os.path.join(outputdir, 'l1b_toa_' + band + '_graph.png'), dpi=200)
+        plt.close(fig)

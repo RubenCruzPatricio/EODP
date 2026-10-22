@@ -1,6 +1,7 @@
 import numpy as np
 from common.io.writeToa import readToa
 reference = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1B\output"
+indir = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1B\input"
 outdir    = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1B\output_ruben"
 
 bands = ['VNIR-0', 'VNIR-1', 'VNIR-2', 'VNIR-3']
