@@ -87,9 +87,9 @@ class l1b(initL1b):
         mid_value = int(toa_l1b.shape[0] / 2)
         fig, ax = plt.subplots()
         ax.plot(toa_l1b[mid_value, :], 'k')
-        plt.suptitle('TOA_l1b')
+        ax.set_title(band)
         plt.xlabel('Across Track [-]')
-        plt.ylabel('Radiances [mW/m2/sr]')
+        plt.ylabel('TOA [mW/m2/sr]')
         plt.grid(True)
         plt.show
         fig.savefig(outputdir + '/l1b_toa_' + band + '_graph.png')

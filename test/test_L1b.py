@@ -1,23 +1,21 @@
 import numpy as np
 from common.io.writeToa import readToa
-
 reference = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1B\output"
 outdir    = r"C:\Users\rubik\OneDrive\Escritorio\Master\5 Semisemestre\EODP\EODP_TER_2021\EODP-TS-L1B\output_ruben"
 
 bands = ['VNIR-0', 'VNIR-1', 'VNIR-2', 'VNIR-3']
-tol= 0.01e-3
+tol = 0.001
 three_sigma = 1 - 0.997
 
-tests = []
-for band in bands:
-    tests.append((outdir,       f'l1b_toa_eq_{band}.nc'))
+prefixes = ['l1b_toa_eq_', 'l1b_toa_']
+fnames = [f'{p}{band}.nc' for band in bands for p in prefixes]
 
-for out_dir, fname in tests:
-    out = readToa(out_dir, fname)
+for fname in fnames:
+    out = readToa(outdir, fname)
     ref = readToa(reference, fname)
 
     with np.errstate(divide="ignore", invalid="ignore"):
-        rel = np.abs(out - ref) / np.abs(ref) * 100
+        rel = np.abs(out - ref) / np.abs(ref)
     rel[(ref == 0) & (out == 0)] = 0
 
     n_bad = np.count_nonzero(rel > tol)
