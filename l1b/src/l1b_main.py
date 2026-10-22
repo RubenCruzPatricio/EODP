@@ -90,7 +90,7 @@ class l1b(initL1b):
         fig, ax = plt.subplots()
         ax.plot(toa_noeq[mid, :], label='Non-equalised')
         ax.plot(toa_eq[mid, :], 'k', label='Equalised')
-        ax.plot(toa_isrf[mid, :], 'r--', label='Truth (ism_toa_isrf)')
+        ax.plot(toa_isrf[mid, :], 'r--', label='ISRF')
         ax.set_title(band)
         ax.set_xlabel('Across Track [-]')
         ax.set_ylabel('TOA [mW/m2/sr]')
