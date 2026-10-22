@@ -51,6 +51,7 @@ class l1b(initL1b):
             writeToa(self.outdir, self.globalConfig.l1b_toa + band, toa)
             toa_isrf = readToa(self.indir, 'ism_toa_isrf_' + band + '.nc')  # truth
             self.plotL1bToa(toa, toa_noeq, toa_isrf, self.outdir, band)
+            self.plotL1bHist(toa, self.outdir, band)
 
             self.logger.info("End of BAND " + band)
 
@@ -98,4 +99,33 @@ class l1b(initL1b):
         ax.legend()
         os.makedirs(outputdir, exist_ok=True)
         fig.savefig(os.path.join(outputdir, 'l1b_toa_' + band + '_graph.png'), dpi=200)
+        plt.close(fig)
+
+    def plotL1bHist(self, toa, outputdir, band):
+        """
+        Histogram of the TOA radiance per pixel (QGIS-like style)
+        :param toa: TOA in radiances [mW/sr/m2]
+        :param outputdir: output directory
+        :param band: band name
+        """
+        datos = np.asarray(toa).ravel()
+        datos = datos[np.isfinite(datos)]
+
+        vmin, vmax = datos.min(), datos.max()
+        counts, edges = np.histogram(datos, bins=1000, range=(vmin, vmax))
+
+        fig, ax = plt.subplots(figsize=(6.3, 4.9))
+        ax.plot(edges[:-1], counts, color="grey", lw=0.8, label=band)
+        pad = 0.05 * (vmax - vmin)
+        ax.set_xlim(vmin - pad, vmax + pad)
+        ax.set_ylim(0, None)
+        ax.grid(True)
+        ax.minorticks_on()
+        ax.set_title("Histogram " + band, fontweight="bold")
+        ax.set_xlabel("Pixel Value", fontweight="bold")
+        ax.set_ylabel("Frequency", fontweight="bold")
+        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), frameon=False, fontsize=8)
+        fig.tight_layout()
+        os.makedirs(outputdir, exist_ok=True)
+        fig.savefig(os.path.join(outputdir, 'l1b_toa_' + band + '_hist.png'), dpi=150)
         plt.close(fig)
