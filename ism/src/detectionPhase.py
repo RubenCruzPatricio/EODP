@@ -113,6 +113,7 @@ class detectionPhase(initIsm):
         toa_ph= Ein/Ephoton
 
         i2p= area_pix*tint*1e-3/((h*c)/wv)
+        print('i2p=',i2p)
 
         return toa_ph
 
