@@ -97,6 +97,8 @@ class opticalPhase(initIsm):
 
         toa= toa*Tr*(1/4)*np.pi*(D/f)**2
 
+        print('K=', Tr*(1/4)*np.pi*(D/f)**2)
+
         return toa
 
 
