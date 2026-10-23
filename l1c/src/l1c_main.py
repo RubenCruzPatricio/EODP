@@ -35,6 +35,10 @@ class l1c(initL1c):
             # -------------------------------------------------------------------------------
             lat_l1c, lon_l1c, toa_l1c = self.l1cProjtoa(lat, lon, toa, band)
 
+            # Plot L1C TOA
+            # -------------------------------------------------------------------------------
+            self.plotL1cToa(lat_l1c, lon_l1c, toa_l1c, band)
+
             # Write output TOA
             # -------------------------------------------------------------------------------
             writeL1c(self.outdir, self.globalConfig.l1c_toa + band, lat_l1c, lon_l1c, toa_l1c)
@@ -113,3 +117,29 @@ class l1c(initL1c):
         :return: NA
         '''
         #TODO
+
+    def plotL1cToa(self, lat_l1c, lon_l1c, toa_l1c, band):
+        '''
+        Plot the L1C radiances on the MGRS grid points, colour-coded by value.
+        :param lat_l1c: L1C latitudes [deg]
+        :param lon_l1c: L1C longitudes [deg]
+        :param toa_l1c: L1C radiances
+        :param band: band
+        :return: NA
+        '''
+        jet = plt.get_cmap('jet', len(lat_l1c))
+        toa_l1c[np.argwhere(toa_l1c < 0)] = 0
+        max_toa = np.max(toa_l1c)
+
+        fig = plt.figure(figsize=(20, 10))
+        for ii in range(len(lat_l1c)):
+            clr = jet(toa_l1c[ii] / max_toa)
+            plt.plot(lon_l1c[ii], lat_l1c[ii], '.', color=clr, markersize=10)
+        plt.title('Projection on ground', fontsize=20)
+        plt.xlabel('Longitude [deg]', fontsize=16)
+        plt.ylabel('Latitude [deg]', fontsize=16)
+        plt.grid()
+        plt.axis('equal')
+
+        plt.savefig(self.outdir + 'toa_' + band + '.png')
+        plt.close(fig)
