@@ -112,6 +112,8 @@ class detectionPhase(initIsm):
         Ephoton= (h*c)/wv
         toa_ph= Ein/Ephoton
 
+        i2p= area_pix*tint*1e-3/((h*c)/wv)
+
         return toa_ph
 
     def phot2Electr(self, toa, QE):
